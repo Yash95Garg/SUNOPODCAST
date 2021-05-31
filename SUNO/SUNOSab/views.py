@@ -5,6 +5,7 @@ from django.http.response import JsonResponse
 
 from SUNOSab.models import Register
 from SUNOSab.serializers import RegisterSerializer
+from rest_framework import status
 # Create your views here.
 
 
@@ -32,9 +33,9 @@ def registerApi(request,Id=0):
             return JsonResponse("Updated Successfully!!", safe=False)
         return JsonResponse("Failed to Update.", safe=False)
 
-    elif request.method=='DELETE':
-        register=RegisterSerializer.objects.get(UserID=Id)
-        register.delete()
-        return JsonResponse("Deleted Succeffully!!", safe=False)
+    elif request.method == 'DELETE':
+        count = Register.objects.get(UserID=Id).delete()
+        return JsonResponse({'message': '{} Enteries were deleted successfully!'.format(count[0])})
+ 
 
 
