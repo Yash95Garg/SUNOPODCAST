@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login
 import uuid
 from django.conf import settings
 from django.core.mail import send_mail
+from django.core.files.storage import FileSystemStorage
 
 # Create your views here.
 @api_view(['GET'])
@@ -17,11 +18,16 @@ def success(request):
 
 #@api_view(['POST'])
 #def post(request):
-#    author = request.data.get('username')
-#    title = request.data.get('password')
+#    title = request.data.get('title')
+#    description = request.data.get('description')
+#    uploaded_file = request.FILES['document']
+#    fs = FileSystemStorage()
+#    name = fs.save(uploaded_file.name, uploaded_file)
+#    url = fs.url(name)
+#    print(url)
 #    print(author)
 #    print(title)
-#    object = Post.objects.create(author=author,title=title)
+#    object = Post.objects.create(author=author,title=title,description=description,imageurl=url)
 #    object.save()
 #    return HttpResponse("success")
 
