@@ -111,13 +111,12 @@ def send_mail_after_registration(email , token):
 @api_view(['POST'])
 def add_blog(request):
     if request.method == 'POST':
-    #    uploaded_file = request.FILES['document']
-    #    fs = FileSystemStorage()
-    #    name = fs.save(uploaded_file.name, uploaded_file)
-    #    imageurl = fs.url(name)
-        imageurl = "hello"
-        title = request.data.get('title')
-        description = request.data.get('description')
+        uploaded_file = request.FILES['document']
+        fs = FileSystemStorage()
+        name = fs.save(uploaded_file.name, uploaded_file)
+        imageurl = fs.url(name)
+        title = request.POST.get('title')
+        description = request.POST.get('description')
         user = User.objects.filter(username = "suno").first()
         blog_obj = Blog(
             author = user , title = title, 
