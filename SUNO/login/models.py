@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 
 User._meta.get_field('email')._unique = True
 User._meta.get_field('email').blank = False
@@ -24,6 +25,7 @@ class UserProfile(models.Model):
         return self.user.username        
 
 class Blog(models.Model):
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,)
     title = models.CharField(max_length=200)
     author = models.ForeignKey(User, on_delete= models.CASCADE,related_name='blog_posts')
     updated_on = models.DateTimeField(auto_now= True)
@@ -39,6 +41,7 @@ class Blog(models.Model):
         return self.title        
  
 class Event(models.Model):
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,)
     title = models.CharField(max_length=200)
     author = models.ForeignKey(User, on_delete= models.CASCADE,related_name='event_posts')
     updated_on = models.DateTimeField(auto_now= True)
