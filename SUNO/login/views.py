@@ -96,4 +96,56 @@ def send_mail_after_registration(email , token):
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(subject, message , email_from ,recipient_list )
+
+#@api_view(['POST'])
+#def blog(request):
+#    title = request.data.get('title')
+#    description = request.data.get('description')
+#    imageurl = request.data.get('imageurl')
+#    blog_post = Blog(title=title, description=description, imageurl=imageurl)     
+#    blog_post.save()
+#    return HttpResponse("Added successfully")
+
+
+
+@api_view(['POST'])
+def add_blog(request):
+    if request.method == 'POST':
+    #    uploaded_file = request.FILES['document']
+    #    fs = FileSystemStorage()
+    #    name = fs.save(uploaded_file.name, uploaded_file)
+    #    imageurl = fs.url(name)
+        imageurl = "hello"
+        title = request.data.get('title')
+        description = request.data.get('description')
+        user = User.objects.filter(username = "suno").first()
+        blog_obj = Blog(
+            author = user , title = title, 
+            description = description, imageurl = imageurl
+            )
+        blog_obj.save()
+        print(blog_obj)
+        return HttpResponse("Added")
+    
+@api_view(['DELETE'])
+def blog_delete(request , id):
+    try:
+        blog_obj = Blog.objects.get(id = id)
+        user = User.objects.filter(username = "suno").first()
+        if blog_obj.author == user:
+            blog_obj.delete()
+            return HttpResponse("Delete")
+        
+    except Exception as e :
+        print(e)
+
+
+@api_view(['GET'])
+def blogHome(request): 
+    allPosts=Blog.objects.all()
+    context={'allPosts': allPosts} 
+    return HttpResponse(allPosts)
+
+
+
             
