@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 import uuid
 from django.conf import settings
 from django.core.mail import send_mail
@@ -147,15 +147,23 @@ def send_mail_for_forgot(email , token):
     send_mail(subject, message , email_from ,recipient_list )
 
 
-#@api_view(['POST'])
-#def blog(request):
-#    title = request.data.get('title')
-#    description = request.data.get('description')
-#    imageurl = request.data.get('imageurl')
-#    blog_post = Blog(title=title, description=description, imageurl=imageurl)     
-#    blog_post.save()
-#    return HttpResponse("Added successfully")
+@api_view(['GET'])
+def ProfilePage(request):
+    if request.method == 'GET':
+        user = User.objects.filter(username = "suno").first()
+        Profile = UserProfile.objects.filter(user = user).first()
+        username = user.username
+        first_name = user.first_name
+        last_name = user.last_name
+        profileimage = Profile.profileimage
+        bio = Profile.bio
+        doc = {username : username, first_name : first_name, last_name: last_name, profileimage : profileimage, bio : bio}
+        return HttpResponse(doc)
 
+
+#LOGOUT
+def logout_view(request):
+    logout(request)
 
 
 @api_view(['POST'])

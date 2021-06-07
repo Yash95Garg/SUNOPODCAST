@@ -11,4 +11,6 @@ urlpatterns = [
     path('blog_get', views.blogHome),
     path('forgot', views.forgot),
     path('password/<auth_token>' , views.change),
+    path('logout', views.logout_view),
+    path('profile', views.ProfilePage),
 ]
