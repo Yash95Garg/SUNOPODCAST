@@ -97,6 +97,56 @@ def send_mail_after_registration(email , token):
     recipient_list = [email]
     send_mail(subject, message , email_from ,recipient_list )
 
+
+#FORGOT PASSWORD
+@api_view(['GET','POST'])
+def forgot(request):
+    if request.method == 'GET':
+        return HttpResponse("Forgot Page")
+    if request.method == 'POST':        
+        email = request.data.get('email')
+        user_obj = User.objects.filter(email = email).first()
+        if user_obj is None:
+            return HttpResponse("User Not Exists")
+        profile_obj = Profile.objects.filter(user = user_obj).first()
+        if not profile_obj.is_verified:
+            return HttpResponse("Please Verify Your Account")
+        auth_token = profile_obj.auth_token
+        send_mail_for_forgot(email , auth_token)
+        return HttpResponse("Mail Sent Successfully")
+
+@api_view(['GET','POST'])
+def change(request , auth_token):
+    if request.method == 'GET':
+        return HttpResponse("Enter Details")
+    
+    if request.method == 'POST':
+        try:
+            profile_obj = Profile.objects.filter(auth_token = auth_token).first()
+    
+            if profile_obj:
+                if not profile_obj.is_verified:
+                    return HttpResponse("Profile is not verified")
+            
+                user = profile_obj.user
+                password = request.data.get('password')
+                user.set_password(password)
+                user.save()
+                return HttpResponse("Your Password has been changed successfully")
+            else:
+                return HttpResponse("Error While Changing Password")
+        except Exception as e:
+            print(e)
+            return HttpResponse("Not Changed Successfully")        
+
+def send_mail_for_forgot(email , token):
+    subject = 'Request For Password Change'
+    message = f'Hi Click the link to change your password http://127.0.0.1:8000/api/password/{token}'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [email]
+    send_mail(subject, message , email_from ,recipient_list )
+
+
 #@api_view(['POST'])
 #def blog(request):
 #    title = request.data.get('title')

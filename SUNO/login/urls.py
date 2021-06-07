@@ -8,5 +8,7 @@ urlpatterns = [
     path('verify/<auth_token>' , views.verify),
     path('blog', views.add_blog),
     path('blog_delete/<str:id>',views.blog_delete),
-    path('blog_get', views.blogHome)
+    path('blog_get', views.blogHome),
+    path('forgot', views.forgot),
+    path('password/<auth_token>' , views.change),
 ]
