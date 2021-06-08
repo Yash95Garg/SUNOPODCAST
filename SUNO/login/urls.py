@@ -13,4 +13,7 @@ urlpatterns = [
     path('password/<auth_token>' , views.change),
     path('logout', views.logout_view),
     path('profile', views.ProfilePage),
+    path('add_event', views.add_event),
+    path('event_delete/<str:id>',views.event_delete),
+    path('event_get', views.eventHome),
 ]
