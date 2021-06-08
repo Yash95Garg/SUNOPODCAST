@@ -3,6 +3,7 @@ from django.http.response import HttpResponseNotAllowed
 from django.shortcuts import render,HttpResponse,redirect
 from django.views.decorators.csrf import csrf_exempt
 from .models import *
+import datetime
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -204,5 +205,44 @@ def blogHome(request):
     return HttpResponse(allPosts)
 
 
+@api_view(['POST'])
+def add_event(request):
+    if request.method == 'POST':
+        uploaded_file = request.FILES['document']
+        fs = FileSystemStorage()
+        name = fs.save(uploaded_file.name, uploaded_file)
+        imageurl = fs.url(name)
+        title = request.data.get('title')
+        user = User.objects.filter(username = "suno").first()
+        description = request.data.get('description')
+        tag = request.data.get('tag')
+        event_on = request.data.get('event_on')
+        blog_obj = Event(
+            author = user , title = title, 
+            description = description, imageurl = imageurl,tag=tag,
+            event_on = event_on
+            )
+        blog_obj.save()
+        print(blog_obj)
+        return HttpResponse("Added")
+
+@api_view(['DELETE'])
+def event_delete(request , id):
+    try:
+        blog_obj = Event.objects.get(id = id)
+        user = User.objects.filter(username = "suno").first()
+        if blog_obj.author == user:
+            blog_obj.delete()
+            return HttpResponse("Delete")
+        
+    except Exception as e :
+        print(e)
+
+
+@api_view(['GET'])
+def eventHome(request): 
+    allPosts=Event.objects.all()
+    context={'allPosts': allPosts} 
+    return HttpResponse(allPosts)
 
             
